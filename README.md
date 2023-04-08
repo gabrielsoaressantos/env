@@ -5,6 +5,7 @@
 [![](http://img.shields.io/badge/godoc-reference-5272B4.svg?style=for-the-badge)](https://pkg.go.dev/github.com/caarlos0/env/v8)
 
 A simple and zero-dependencies library to parse environment variables into structs.
+This fork adds the possibility of adding nested fields.
 
 ## Example
 

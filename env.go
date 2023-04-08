@@ -164,6 +164,29 @@ func Parse(v interface{}) error {
 	return parseInternal(v, defaultOptions())
 }
 
+// ParseNested parses a struct containing `env` tags and loads its values from
+// environment variables. It'll also parse nested objects if the value contained
+// in the tag is '<parse>'
+func ParseNested(v interface{}) error {
+	err := parseInternal(v, defaultOptions())
+	if err != nil {
+		return err
+	}
+
+	val := reflect.ValueOf(v).Elem()
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Type().Field(i)
+		tag := field.Tag.Get(defaultOptions().TagName)
+
+		if tag == "<parse>" {
+			fieldPtr := val.Field(i).Addr().Interface()
+			ParseNested(fieldPtr)
+		}
+	}
+
+	return nil
+}
+
 // Parse parses a struct containing `env` tags and loads its values from
 // environment variables.
 func ParseWithOptions(v interface{}, opts Options) error {
